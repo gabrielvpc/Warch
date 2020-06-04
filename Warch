@@ -74,6 +74,57 @@ fi
 
 clear
 
+#Formatando as partições#
+while [ $saida: != sair ]
+do
+	clear
+	echo -e "\n"
+	fdisk -l
+	echo -e "\n"
+	echo -e "(Caso já tenha particionado o disco , apenas aperte 'Enter' e digite 'sair' no final)"
+	echo -e "\n"
+	echo -e "Selecione uma partição,exemplo /dev/sda1 /dev/sda2 !!\n"
+	read -p "Selecione uma partição = " particao
+	echo -e "\nEsquema de formatação de discos"
+	echo -e "\n 1=Ext4 \n 2=Ext3 \n 3=Ext2 \n 4=Fat \n 5=Vfat \n 6=NTFS \n 7=Swap\n"
+	read -p "Insira um número = " formato
+			if [ $formato == 1 ]
+			then
+				mkfs.ext4 $particao
+			elif [ $formato == 2 ]
+			then 			
+				mkfs.ext3 $particao
+			elif [ $formato == 3 ]
+			then 
+				mkfs.ext2 $particao
+			elif [ $formato == 4 ]
+			then
+				mkfs.fat $particao
+			elif [ $formato == 5 ]
+			then 
+				mkfs.vfat $particao
+			elif [ $formato == 6 ]
+			then
+				mkfs.ntfs $particao
+			elif [ $formato == 7 ]
+			then
+				mkswap $particao
+				swapon $particao
+			else
+				echo -e "Apenas numeros entre 1 à 7 !!"
+			fi
+	clear
+	echo -e "\nPressione 'Enter' para continuar o particionamento ou digite 'sair' quando terminar de configurar todas as partições\n "
+	read -p "= " saida
+		if [ $saida == sair ]
+		then
+			break
+		fi
+done
+#Formatando as partições#
+
+clear
+
 #SConfigurando partições#
 echo -e 'Configurando partições:\n'
 fdisk -l | grep /dev/
@@ -104,10 +155,6 @@ done
 
 clear
 
-#Configurando o Fstab#
-genfstab -U /mnt >> /mnt/etc/fstab
-#Configurando o Fstab#
-
 #Instalando o sistema base e o kernel#
 echo -e 'Instalando o sistema base e o kernel: \n'
 echo -e "\nQual kernel deseja instalar ? \n\n 1=Linux \n 2=Linux-lts \n 3=Linux-hardened \n"
@@ -127,6 +174,10 @@ else
 	exit
 fi
 #Instalando o sistema base e o kernel#
+
+#Configurando o Fstab#
+genfstab -U /mnt >> /mnt/etc/fstab
+#Configurando o Fstab#
 
 clear
 
@@ -169,6 +220,13 @@ clear
 
 #SOM,VIDEO,ARQUIVOS E CODECS#
 arch-chroot /mnt/ pacman -S xorg-server xorg-apps xf86-input-mouse xf86-input-keyboard xf86-input-synaptics xorg-xinit xorg-twm xterm xorg-xclock xarchiver mpack rar arj p7zip sharutils unrar p7zip mlocate lzip lunzip plzip gunzip unzip pulseaudio pulseaudio-alsa pavucontrol alsa-firmware alsa-utils a52dec faac faad2 flac
-jasper lame libdca libdv libmad libmpeg2 libtheora libvorbis libxv wavpack x264 xvidcore gstreamer gst-plugins-base gst-plugins-base-libs gst-plugins-good gst-plugins-bad gst-plugins-ugly gst-libav gvfs gvfs-afc vfs-gphoto2 gvfs-mtp vfs-nfs gvfs-smb screenfetch --noconfirm
+jasper lame libdca libdv libmad libmpeg2 libtheora libvorbis libxv wavpack x264 xvidcore gstreamer gst-plugins-base gst-plugins-base-libs gst-plugins-good gst-plugins-bad gst-plugins-ugly gst-libav gvfs gvfs-afc vfs-gphoto2 gvfs-mtp vfs-nfs gvfs-smb
+
+
+
+
+
+
+
 
 #SOM,VIDEO,ARQUIVOS E CODECS#
