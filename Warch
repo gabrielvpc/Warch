@@ -1,0 +1,174 @@
+#!/bin/bash
+
+pacman -Sy
+clear
+
+#Configurando o teclado#
+echo -e 'Configurando o teclado:'
+echo -e '\nIndique o formato do seu teclado !'
+echo -e '\n 1=br-abnt \n 2=br-abnt2 \n 3=br-latin1-abnt2 \n 4=br-latin1-us \n'
+read -p "> " linguagem
+if [ $linguagem == 1 ]
+then
+	loadkeys br-abnt
+	echo -e "\nSeu teclado agora é br-abnt !"
+
+elif [ $linguagem == 2 ]
+then
+	loadkeys br-abnt2
+	echo -e "\nSeu teclado agora é br-abnt2 !"
+
+elif [ $linguagem == 3 ]
+then
+	loadkeys br-latin1-abnt2
+	echo -e "\nSeu teclado agora é br-latin1-abnt2 !"
+
+elif [ $linguagem == 4 ]
+then
+	loadkeys br-latin1-us
+	echo -e "\nSeu teclado agora é br-latin1-us !"	
+else
+	clear
+	echo "Insira apenas números de 1 à 4 !! "
+	exit
+fi
+#Configurando o teclado#
+
+clear
+
+#Configurando a rede#
+echo -e 'Configurando a rede:'
+echo -e '\n(Nota importante > Quando for necessário responder sim ou não , responda absolutamente em minúsculo !!)\n'
+read -p "Você está conectado a internet ? s/n = " conexao
+if [ $conexao == n ]
+then 
+	clear
+	wifi-menu
+elif [ $conexao == s ]
+then	
+	echo
+else
+	clear
+	echo "Apenas (s) ou (n) !!"	
+	exit		
+fi
+#Configurando a internet#
+
+clear
+
+#Particionando o disco#
+echo -e 'Particionando o disco:'
+echo -e '\n 1=cfdisk \n 2=parted \n'
+read -p "Qual particionador deseja utilizar ? = " particionador
+if [ $particionador == 1 ]
+then
+	cfdisk  
+elif [ $particionador == 2 ] 
+then
+	parted  
+else
+	echo "Apenas 1 ou 2 !! "
+	exit
+fi
+#Particionando o disco#
+
+clear
+
+#SConfigurando partições#
+echo -e 'Configurando partições:\n'
+fdisk -l | grep /dev/
+echo -e "\n"
+read -p "Indique a sua partição / (root) = " particao_root 
+mount $particao_root /mnt
+mkdir /mnt/home
+mkdir /mnt/boot
+clear
+read -p "Deseja indicar outras partições? s/n = " particoes
+while [ $particoes == s ]
+do
+	clear
+	echo -e 'Configurando partições:\n'
+	fdisk -l | grep /dev/
+	echo -e "\n"
+	read -p "Indique a sua partição = " particao
+	read -p "Indique o local em que ela será montada, EX: /home /boot = " particaoMont
+	mount $particao /mnt$particaoMont
+	echo -e "\nPressione 'Enter' para continuar o particionamento ou digite 'sair' quando terminar de configurar todas as partições\n "
+	read -p "= " particoes1
+    	if [ $particoes1 == sair ]
+    	then
+        	    break
+		fi
+done
+#SConfigurando partições#
+
+clear
+
+#Configurando o Fstab#
+genfstab -U /mnt >> /mnt/etc/fstab
+#Configurando o Fstab#
+
+#Instalando o sistema base e o kernel#
+echo -e 'Instalando o sistema base e o kernel: \n'
+echo -e "\nQual kernel deseja instalar ? \n\n 1=Linux \n 2=Linux-lts \n 3=Linux-hardened \n"
+read -p "> " kernel_sistema
+if [ $kernel_sistema == 1 ]
+then
+	pacstrap /mnt base linux linux-firmware
+elif [ $kernel_sistema == 2 ]
+then
+	pacstrap /mnt base linux-lts linux-firmware
+elif [ $kernel_sistema == 3 ]
+then
+	pacstrap /mnt base linux-hardened linux-firmware
+else
+	clear
+	echo -e 'Apenas números de 1 à 3 !'
+	exit
+fi
+#Instalando o sistema base e o kernel#
+
+clear
+
+#Configurando idioma#
+echo 'LANG=pt_BR.UTF-8' > /etc/locale.conf
+#Configurando idioma#
+
+#mkinitcpio#
+arch-chroot /mnt/ mkinitcpio -P
+#mkinitcpio#
+
+clear
+
+#Definindo a senha do root#
+echo -e 'Definindo senha do root: \n'
+echo -e "\nInsira a senha do seu root "
+arch-chroot /mnt/ passwd
+#Definindo a senha do root#
+
+clear
+
+#Criando usuario#
+echo -e 'Criando usuário: \n'
+echo -e 'Digite o nome do seu usuário: '
+read -p "> " usuario
+useradd --badnames $usuario -m
+passwd $usuario
+#Criando usuario#
+
+clear
+
+#Instalando o systlinux e essenciais#
+arch-chroot /mnt/ pacman -S syslinux gptfdisk --noconfirm
+arch-chroot /mnt/ syslinux-install_update -i -a -m
+arch-chroot /mnt/ pacman -S nano networkmanager network-manager-applet wireless_tools wpa_supplicant dhcp dhcpcd --noconfirm
+arch-chroot /mnt/ systemctl enable dhcpcd
+#Instalando o syslinux e essenciais#
+
+clear
+
+#SOM,VIDEO,ARQUIVOS E CODECS#
+arch-chroot /mnt/ pacman -S xorg-server xorg-apps xf86-input-mouse xf86-input-keyboard xf86-input-synaptics xorg-xinit xorg-twm xterm xorg-xclock xarchiver mpack rar arj p7zip sharutils unrar p7zip mlocate lzip lunzip plzip gunzip unzip pulseaudio pulseaudio-alsa pavucontrol alsa-firmware alsa-utils a52dec faac faad2 flac
+jasper lame libdca libdv libmad libmpeg2 libtheora libvorbis libxv wavpack x264 xvidcore gstreamer gst-plugins-base gst-plugins-base-libs gst-plugins-good gst-plugins-bad gst-plugins-ugly gst-libav gvfs gvfs-afc vfs-gphoto2 gvfs-mtp vfs-nfs gvfs-smb screenfetch --noconfirm
+
+#SOM,VIDEO,ARQUIVOS E CODECS#
