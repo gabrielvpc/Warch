@@ -237,32 +237,32 @@ echo -e "\n Selecione o driver de video correspondente à sua maquina: \n\n 1=AM
 read -p "> " driver_video 
 if [ $driver_video == 1 ] #VARIÁVEL 1 IRÁ INSTALAR OS DRIVERS DE VIDEO DA AMD/ATI
 then
-	pacman -S xf86-video-amdgpu --noconfirm
-	pacman -S mesa --noconfirm
-	pacman -S lib32-mesa --noconfirm
+	arch-chroot /mnt/ pacman -S xf86-video-amdgpu --noconfirm
+	arch-chroot /mnt/ pacman -S mesa --noconfirm
+	arch-chroot /mnt/ pacman -S lib32-mesa --noconfirm
 	clear
 elif [ $driver_video == 2 ] #VARIÁVEL 2 IRÁ INSTALAR OS DRIVERS DE VIDEO DA INTEL
 then
-	pacman -S xf86-video-intel --noconfirm
-	pacman -S mesa --noconfirm
-	pacman -S lib32-mesa --noconfirm
+	arch-chroot /mnt/ pacman -S xf86-video-intel --noconfirm
+	arch-chroot /mnt/ pacman -S mesa --noconfirm
+	arch-chroot /mnt/ pacman -S lib32-mesa --noconfirm
 	clear
 elif [ $driver_video == 3 ] #VARIÁVEL 3 IRÁ INSTALAR OS DRIVERS DE VIDEO DA NVIDIA
 then
-	pacman -S xf86-video-nouveau --noconfirm
-	pacman -S nvidia --noconfirm
-	pacman -S nvidia-utils --noconfirm
+	arch-chroot /mnt/ pacman -S xf86-video-nouveau --noconfirm
+	arch-chroot /mnt/ pacman -S nvidia --noconfirm
+	arch-chroot /mnt/ pacman -S nvidia-utils --noconfirm
 	clear
 elif [ $driver_video == 4 ] #VARIÁVEL 4 IRÁ INSTALAR OS DRIVERS DE VIDEO GENÉRICOS
 then
-	pacman -S xf86-video-fbdev --noconfirm
-	pacman -S xf86-video-vesa --noconfirm
+	arch-chroot /mnt/ pacman -S xf86-video-fbdev --noconfirm
+	arch-chroot /mnt/ pacman -S xf86-video-vesa --noconfirm
 	clear
 elif [ $driver_video == 5 ] #VARIÁVEL 5 IRÁ INSTALAR OS DRIVER DE VIDEO DÁ ATI
 then
-	pacman -S xf86-video-ati --noconfirm
-	pacman -S mesa --noconfirm
-	pacman -S lib32-mesa --noconfirm
+	arch-chroot /mnt/ pacman -S xf86-video-ati --noconfirm
+	arch-chroot /mnt/ pacman -S mesa --noconfirm
+	arch-chroot /mnt/ pacman -S lib32-mesa --noconfirm
 	clear
 else
 	clear 
@@ -276,46 +276,46 @@ echo -e "\n Selecione uma interface gráfica: \n\n 1=Budgie \n 2=Cinnamon \n 3=D
 read -p "> " interface 
 if [ $interface == 1 ] #VARIÁVEL 1 IRÁ INSTALAR A INTERFACE BUDGIE
 then
-	pacman -S budgie-desktop --noconfirm
+	arch-chroot /mnt/ pacman -S budgie-desktop --noconfirm
 	clear
 elif [ $interface == 2 ] #VARIÁVEL 2 IRÁ INSTALAR A INTERFACE CINNAMON
 then
-	pacman -S cinnamon --noconfirm
-	pacman -S nemo-fileroller --noconfirm
+	arch-chroot /mnt/ pacman -S cinnamon --noconfirm
+	arch-chroot /mnt/ pacman -S nemo-fileroller --noconfirm
 	clear
 elif [ $interface == 3 ] #VARIÁVEL 3 IRÁ INSTALAR A INTERFACE DEEPIN
 then
-	pacman -S deepin --noconfirm
-	pacman -S deepin-extra --noconfirm
+	arch-chroot /mnt/ pacman -S deepin --noconfirm
+	arch-chroot /mnt/ pacman -S deepin-extra --noconfirm
 elif [ $interface == 4 ] #VARIÁVEL 4 IRÁ INSTALAR A INTERFACE ENLIGHTENMENT
 then
-	pacman -S enlightenment --noconfirm
+	arch-chroot /mnt/ pacman -S enlightenment --noconfirm
 	clear
 elif [ $interface == 5 ] #VARIÁVEL 5 IRÁ INSTALAR A INTERFACE GNOME
 then
-	pacman -S gnome --noconfirm
-	pacman -S gnome-extra --noconfirm
+	arch-chroot /mnt/ pacman -S gnome --noconfirm
+	arch-chroot /mnt/ pacman -S gnome-extra --noconfirm
 	clear
 elif [ $interface == 6 ] #VARIÁVEL 6 IRÁ INSTALAR A INTERFACE KDE-PLASMA
 then
-	pacman -S plasma --noconfirm
+	arch-chroot /mnt/ pacman -S plasma --noconfirm
 elif [ $interface == 7 ] #VARIÁVEL 7 IRÁ INSTALAR A INTERFACE LXDE
 then
-	pacman -S lxde --noconfirm
-	pacman -S lxde-gtk3 --noconfirm
+	arch-chroot /mnt/ pacman -S lxde --noconfirm
+	arch-chroot /mnt/ pacman -S lxde-gtk3 --noconfirm
 elif [ $interface == 8 ] #VARIÁVEL 8 IRÁ INSTALAR A INTERFACE LXQT
 then
-	pacman -S lxqt --noconfirm
+	arch-chroot /mnt/ pacman -S lxqt --noconfirm
 	clear
 elif [ $interface == 9 ] #VARIÁVEL 9 IRÁ INSTALAR A INTERFACE MATE
 then
-	pacman -S mate --noconfirm
-	pacman -S mate-extra --noconfirm
+	arch-chroot /mnt/ pacman -S mate --noconfirm
+	arch-chroot /mnt/ pacman -S mate-extra --noconfirm
 	clear
 elif [ $interface == 10 ] #VARIÁVEL 10 IRÁ INSTALAR A INTERFACE XFCE
 then
-	pacman -S xfce4 --noconfirm
-	pacman -S xfce4-goodies --noconfirm
+	arch-chroot /mnt/ pacman -S xfce4 --noconfirm
+	arch-chroot /mnt/ pacman -S xfce4-goodies --noconfirm
 	clear
 else
 	clear 
@@ -329,23 +329,23 @@ echo -e "\n Selecione um gerenciador de entrada (Display Manager): \n\n 1=Lightd
 read -p "> " display 
 if [ $display == 1 ]
 then
-	pacman -S lightdm lightdm-gtk-greeter lightdm-gtk-greeter-settings --noconfirm
-	systemctl enable lightdm
+	arch-chroot /mnt/ pacman -S lightdm lightdm-gtk-greeter lightdm-gtk-greeter-settings --noconfirm
+	arch-chroot /mnt/ systemctl enable lightdm
 	clear
 elif [ $display == 2 ]
 then
-	pacman -S sddm --noconfirm
-	systemctl enable sddm
+	arch-chroot /mnt/ pacman -S sddm --noconfirm
+	arch-chroot /mnt/ systemctl enable sddm
 	clear
 elif [ $display == 3 ]
 then
-	pacman -S gdm --noconfirm
-	systemctl enable gdm
+	arch-chroot /mnt/ pacman -S gdm --noconfirm
+	arch-chroot /mnt/ systemctl enable gdm
 	clear
 elif [ $display == 4 ]
 then
-	pacman -S lxdm --noconfirm
-	systemctl enable lxdm
+	arch-chroot /mnt/ pacman -S lxdm --noconfirm
+	arch-chroot /mnt/ systemctl enable lxdm
 	clear
 else
 	clear
@@ -358,12 +358,12 @@ echo -e "\n Deseja instalar os drivers de Bluetooth ? s/n \n"
 read -p  "> " bluetooth
 if [ $bluetooth == s ]
 then
-	pacman -S bluez --noconfirm
-	pacman -S blueman --noconfirm
-	pacman -S bluez-utils --noconfirm
-	modprobe btusb
-	systemctl enable bluetooth
-	systemctl start bluetooth
+	arch-chroot /mnt/ pacman -S bluez --noconfirm
+	arch-chroot /mnt/ pacman -S blueman --noconfirm
+	arch-chroot /mnt/ pacman -S bluez-utils --noconfirm
+	arch-chroot /mnt/ modprobe btusb
+	arch-chroot /mnt/ systemctl enable bluetooth
+	arch-chroot /mnt/ systemctl start bluetooth
 	clear 
 elif [ $bluetooth == n ]
 then
@@ -380,12 +380,12 @@ echo -e "\n Deseja instalar os drivers de impressora ? s/n  \n"
 read -p "> " impressora
 if [ $impressora == s ]
 then
-	pacman -S cups --noconfirm
-	pacman -S hplip --noconfirm
-	pacman -S system-config-printer --noconfirm
-	pacman -S gtk3-print-backends --noconfirm
-	systemctl enable org.cups.cupsd.service
-	systemctl start org.cups.cupsd.service
+	arch-chroot /mnt/ pacman -S cups --noconfirm
+	arch-chroot /mnt/ pacman -S hplip --noconfirm
+	arch-chroot /mnt/ pacman -S system-config-printer --noconfirm
+	arch-chroot /mnt/ pacman -S gtk3-print-backends --noconfirm
+	arch-chroot /mnt/ systemctl enable org.cups.cupsd.service
+	arch-chroot /mnt/ systemctl start org.cups.cupsd.service
 	clear
 elif [ $impressora == n ]
 then
@@ -405,20 +405,20 @@ then
 	clear
 elif [ $navegador == 1 ]
 then
-	pacman -S chromium --noconfirm
+	arch-chroot /mnt/ pacman -S chromium --noconfirm
 	clear
 elif [ $navegador == 2 ]
 then
-	pacman -S firefox --noconfirm
-	pacman -S firefox-i18n-pt-br --noconfirm
+	arch-chroot /mnt/ pacman -S firefox --noconfirm
+	arch-chroot /mnt/ pacman -S firefox-i18n-pt-br --noconfirm
 	clear
 elif [ $navegador == 3 ]
 then
-	pacman -S min --noconfirm
+	arch-chroot /mnt/ pacman -S min --noconfirm
 	clear
 elif [ $navegador == 4 ]
 then
-	pacman -S opera --noconfirm
+	arch-chroot /mnt/ pacman -S opera --noconfirm
 	clear
 else
 	clear
@@ -435,20 +435,20 @@ then
 	clear
 elif [ $cliente_torrent == 1 ]
 then
-	pacman -S deluge --noconfirm
-	pacman -S deluge-gtk --noconfirm
+	arch-chroot /mnt/ pacman -S deluge --noconfirm
+	arch-chroot /mnt/ pacman -S deluge-gtk --noconfirm
 	clear
 elif [ $cliente_torrent == 2 ]
 then
-	pacman -S qbittorrent --noconfirm
+	arch-chroot /mnt/ pacman -S qbittorrent --noconfirm
 	clear
 elif [ $cliente_torrent == 3 ]
 then
-	pacman -S transmission-gtk --noconfirm	
+	arch-chroot /mnt/ pacman -S transmission-gtk --noconfirm	
 	clear
 elif [ $cliente_torrent == 4 ]
 then
-	pacman -S ktorrent --noconfirm
+	arch-chroot /mnt/ pacman -S ktorrent --noconfirm
 	clear
 else
 	clear
@@ -462,32 +462,7 @@ echo -e "\nDeseja instalar alguns pacotes extras ? s/n "
 read -p "> " utilitarios
 if [ $utilitarios == s ]
 then
-	pacman -S gedit --noconfirm
-	pacman -S git --noconfirm
-	pacman -S terminator --noconfirm
-	pacman -S galculator --noconfirm
-	pacman -S packer --noconfirm
-	pacman -S fakeroot --noconfirm
-	pacman -S gparted --noconfirm
-	pacman -S mtools --noconfirm
-	pacman -S wget --noconfirm
-	pacman -S curl --noconfirm 
-	pacman -S htop --noconfirm 
-	pacman -S sudo --noconfirm
-	pacman -S screenfetch --noconfirm 
-	pacman -S acpi --noconfirm
-	pacman -S nmap --noconfirm
-	pacman -S net-tools --noconfirm
-	pacman -S dnsutils --noconfirm
-	pacman -S tor --noconfirm
-	pacman -S proxychains --noconfirm
-	pacman -S libreoffice --noconfirm
-	pacman -S libreoffice-pt-BR --noconfirm
-	pacman -S mupdf --noconfirm
-	pacman -S clamav --noconfirm
-	pacman -S firewalld --noconfirm
-	pacman -S irssi --noconfirm
-	pacman -S binutils --noconfirm
+	arch-chroot /mnt/ pacman -S gedit git terminator galculator packer fakeroot gparted mtools wget curl htop sudo screenfetch acpi nmap net-tools dnsutils tor proxychains libreoffice libreoffice-pt-BR mupdf clamav firewalld  irssi binutils --noconfirm
 	clear
 elif [ $utilitarios == n ]
 then
