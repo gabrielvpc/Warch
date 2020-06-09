@@ -79,12 +79,13 @@ while [ $saida: != sair ]
 do
 	clear
 	echo -e "\n"
+	echo -e "Formatando as partições:"
 	fdisk -l | grep /dev/
 	echo -e "\n"
-	echo -e "(Caso já tenha particionado o disco , apenas aperte 'Enter' e digite 'sair' no final)"
+	echo -e "(Caso já tenha particionado e formatado o disco , apenas aperte 'Enter' e digite 'sair' no final)"
 	echo -e "\n"
-	echo -e "Selecione uma partição,exemplo /dev/sda1 /dev/sda2 !!\n"
-	read -p "Selecione uma partição = " particao
+	echo -e "Selecione uma partição ! ,EX: /dev/sda1 /dev/sda2 !!\n"
+	read -p "Selecione sua partição = " particao
 	echo -e "\nEsquema de formatação de discos"
 	echo -e "\n 1=Ext4 \n 2=Ext3 \n 3=Ext2 \n 4=Fat \n 5=Vfat \n 6=NTFS \n 7=Swap\n"
 	read -p "Insira um número = " formato
@@ -351,6 +352,7 @@ else
 	clear
 	echo -e "\n Apenas números de 1 à 4 !!" 
 	break
+fi
 #Display Manager#
 
 #Instalando o Bluetooth#
