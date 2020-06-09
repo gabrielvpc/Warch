@@ -1,0 +1,2 @@
+Por algum motivo desconhecido , após executar o comando syslinux-install_update -i -a -m , ele nao seleciona a partição correta para o boot , ou seja , após finalizar a instalação , vá no arquivo syslinux.cfg e verifique se a partição root está correta!.
+:)
