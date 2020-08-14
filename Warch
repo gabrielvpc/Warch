@@ -465,7 +465,7 @@ echo -e "\nDeseja instalar alguns pacotes extras ? s/n "
 read -p "> " utilitarios
 if [ $utilitarios == s ]
 then
-	arch-chroot /mnt/ pacman -S gedit git terminator galculator packer fakeroot gparted mtools wget curl htop sudo screenfetch acpi nmap net-tools ntfs-3g fuse2 dnsutils tor proxychains libreoffice libreoffice-pt-BR mupdf clamav firewalld  irssi binutils bash-completion --noconfirm
+	arch-chroot /mnt/ pacman -S gedit git terminator galculator packer make gcc fakeroot gparted mtools wget curl htop sudo screenfetch acpi nmap net-tools ntfs-3g fuse2 dnsutils tor proxychains libreoffice libreoffice-pt-BR mupdf clamav firewalld  irssi binutils bash-completion --noconfirm
 	clear
 elif [ $utilitarios == n ]
 then
