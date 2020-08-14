@@ -204,15 +204,15 @@ clear
 echo -e 'Criando usuário: \n'
 echo -e 'Digite o nome do seu usuário: '
 read -p "> " usuario
-useradd --badnames -m -g users $usuario 
-passwd $usuario
-mkdir /home/$usuario/Downloads
-mkdir /home/$usuario/Documentos
-mkdir /home/$usuario/Imagens
-mkdir /home/$usuario/Videos
-mkdir /home/$usuario/Scripts
-mkdir /home/$usuario/.icons
-mkdir /home/$usuario/.themes
+arch-chroot /mnt/ useradd --badnames -m -g users $usuario 
+arch-chroot /mnt/ passwd $usuario
+mkdir /mnt/home/$usuario/Downloads
+mkdir /mnt/home/$usuario/Documentos
+mkdir /mnt/home/$usuario/Imagens
+mkdir /mnt/home/$usuario/Videos
+mkdir /mnt/home/$usuario/Scripts
+mkdir /mnt/home/$usuario/.icons
+mkdir /mnt/home/$usuario/.themes
 #Criando usuario#
 
 clear
@@ -222,6 +222,7 @@ arch-chroot /mnt/ pacman -S syslinux gptfdisk --noconfirm
 arch-chroot /mnt/ syslinux-install_update -i -a -m
 arch-chroot /mnt/ pacman -S nano networkmanager network-manager-applet wireless_tools wpa_supplicant dhcp dhcpcd --noconfirm
 arch-chroot /mnt/ systemctl enable dhcpcd
+arch-chroot /mnt/ systemctl enable NetworkManager
 #Instalando o syslinux e essenciais#
 
 clear
@@ -464,7 +465,7 @@ echo -e "\nDeseja instalar alguns pacotes extras ? s/n "
 read -p "> " utilitarios
 if [ $utilitarios == s ]
 then
-	arch-chroot /mnt/ pacman -S gedit git terminator galculator packer fakeroot gparted mtools wget curl htop sudo screenfetch acpi nmap net-tools dnsutils tor proxychains libreoffice libreoffice-pt-BR mupdf clamav firewalld  irssi binutils --noconfirm
+	arch-chroot /mnt/ pacman -S gedit git terminator galculator packer fakeroot gparted mtools wget curl htop sudo screenfetch acpi nmap net-tools ntfs-3g fuse2 dnsutils tor proxychains libreoffice libreoffice-pt-BR mupdf clamav firewalld  irssi binutils bash-completion --noconfirm
 	clear
 elif [ $utilitarios == n ]
 then
