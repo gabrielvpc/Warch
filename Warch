@@ -262,9 +262,7 @@ nano /mnt/etc/sudoers
 #Criando usuario#
 clear
 #Nome da maquina#
-echo -e "Qual nome deseja dar para esta maquina ? \n"
-read -p "> " hostname
-echo $hostname > /mnt/etc/hostname
+nano /mnt/etc/hostname
 #Nome da maquina#
 clear
 #Bootloader
@@ -297,7 +295,7 @@ arch-chroot /mnt/ pacman -S xorg-xinit xorg-twm xterm xorg-xclock xorg-server xo
 #XORG,SOM,VIDEO,ARQUIVOS E CODECS#
 clear
 nano /mnt/etc/pacman.conf
-pacman -Sy
+arch-chroot /mnt/ pacman -Sy
 #Instalando driver de video#
 echo -e "\n Selecione o driver de video correspondente à sua maquina: \n\n 1=AMD \n 2=Intel \n 3=Nvidia \n 4=Genérico \n 5=ATI \n" 
 read -p "> " driver_video 
