@@ -41,7 +41,7 @@ do
 				swapon $particao
             elif [ $formato == 5 ]
             then
-                
+                mkfs.fat -F32 $particao
 			fi
 	clear
 	echo -e "\nPressione 'Enter' para continuar o particionamento ou digite 'sair' quando terminar de configurar todas as partições\n "
@@ -54,8 +54,6 @@ done
 #Formatando as partições#
 clear
 #Configurando partições#
-mkdir /mnt/home
-mkdir /mnt/boot
 fdisk -l | grep dev
 echo -e "\n 1=/dev/sda1 \n 2=/dev/sda2 \n 3=/dev/sda3 \n 4=/dev/sda4 \n 5=/dev/sda5 \n 6=/dev/sda6 \n 7=/dev/sda7 \n 8=/dev/sda8 \n 9=/dev/sda9 \n 10=/dev/sda10 \n "
 read -p "Qual partição você deseja utilizar como /root ? = " particao_root
@@ -90,10 +88,13 @@ read -p "Qual partição você deseja utilizar como /root ? = " particao_root
         then
                 mount /dev/sda10 /mnt/
 		fi
+mkdir /mnt/home
+mkdir /mnt/boot
+mkdir /mnt/boot/efi
 clear
 fdisk -l
 echo -e "\n"
-read -p "Deseja criar a partição /home ? s/n = " criar_home
+read -p "Deseja montar a partição /home ? s/n = " criar_home
 if [ $criar_home == s ]
 then
     echo -e "\n 1=/dev/sda1 \n 2=/dev/sda2 \n 3=/dev/sda3 \n 4=/dev/sda4 \n 5=/dev/sda5 \n 6=/dev/sda6 \n 7=/dev/sda7 \n 8=/dev/sda8 \n 9=/dev/sda9 \n 10=/dev/sda10 \n "        
@@ -133,7 +134,7 @@ fi
 clear
 fdisk -l
 echo -e "\n"
-read -p "Deseja criar a partição /boot ? s/n = " criar_boot
+read -p "Deseja montar a partição /boot ? s/n = " criar_boot
 if [ $criar_boot == s ]
 then
     echo -e "\n 1=/dev/sda1 \n 2=/dev/sda2 \n 3=/dev/sda3 \n 4=/dev/sda4 \n 5=/dev/sda5 \n 6=/dev/sda6 \n 7=/dev/sda7 \n 8=/dev/sda8 \n 9=/dev/sda9 \n 10=/dev/sda10 \n "        
@@ -170,6 +171,46 @@ then
             mount /dev/sda10 /mnt/boot
     fi
 fi
+clear
+fdisk -l
+echo -e "\n"
+read -p "Deseja criar a partição /boot/efi ? s/n = " criar_efi
+if [ $criar_efi == s ]
+then
+    echo -e "\n 1=/dev/sda1 \n 2=/dev/sda2 \n 3=/dev/sda3 \n 4=/dev/sda4 \n 5=/dev/sda5 \n 6=/dev/sda6 \n 7=/dev/sda7 \n 8=/dev/sda8 \n 9=/dev/sda9 \n 10=/dev/sda10 \n "        
+    read -p "Qual partição você deseja utilizar como /boot/efi ? = " particao_efi
+    if [ $particao_efi == 1 ]
+    then
+            mount /dev/sda1 /mnt/boot/efi
+    elif [ $particao_efi == 2 ]
+    then
+            mount /dev/sda2 /mnt/boot/efi
+    elif [ $particao_efi == 3 ]
+    then
+            mount /dev/sda3 /mnt/boot/efi
+    elif [ $particao_efi == 4 ]
+    then
+            mount /dev/sda4 /mnt/boot/efi
+    elif [ $particao_efi == 5 ]
+    then
+            mount /dev/sda5 /mnt/boot/efi
+    elif [ $particao_efi == 6 ]
+    then
+            mount /dev/sda6 /mnt/boot/efi
+    elif [ $particao_efi == 7 ]
+    then
+            mount /dev/sda7 /mnt/boot/efi
+    elif [ $particao_efi == 8 ]
+    then
+            mount /dev/sda8 /mnt/boot/efi
+    elif [ $particao_efi == 9 ]
+    then
+            mount /dev/sda9 /mnt/boot/efi
+    elif [ $particao_efi == 10 ]
+    then
+            mount /dev/sda10 /mnt/boot/efi
+    fi
+fi
 #Configurando partições#
 clear
 #Instalando o sistema base e o kernel#
@@ -178,19 +219,20 @@ echo -e "\nQual kernel deseja instalar ? \n\n 1=Linux \n 2=Linux-lts \n 3=Linux-
 read -p "> " kernel_sistema
 if [ $kernel_sistema == 1 ]
 then
-	pacstrap /mnt nano base linux linux-firmware
+	pacstrap /mnt nano base base-devel linux linux-firmware
 elif [ $kernel_sistema == 2 ]
 then
-	pacstrap /mnt nano base linux-lts linux-firmware
+	pacstrap /mnt nano base base-devel linux-lts linux-firmware
 elif [ $kernel_sistema == 3 ]
 then
-	pacstrap /mnt nano base linux-hardened linux-firmware
+	pacstrap /mnt nano base base-devel linux-hardened linux-firmware
 fi
 #Instalando o sistema base e o kernel#
+
 #Configurando o Fstab#
 genfstab -U /mnt >> /mnt/etc/fstab
 #Configurando o Fstab#
-clear
+
 #Configurando idioma#
 echo 'LANG=pt_BR.UTF-8' > /mnt/etc/locale.conf
 echo 'pt_BR.UTF-8 UTF-8' >> /mnt/etc/locale.gen
@@ -216,6 +258,7 @@ mkdir /mnt/home/$usuario/Videos
 mkdir /mnt/home/$usuario/Scripts
 mkdir /mnt/home/$usuario/.icons
 mkdir /mnt/home/$usuario/.themes
+nano /mnt/etc/sudoers
 #Criando usuario#
 clear
 #Nome da maquina#
@@ -224,21 +267,26 @@ read -p "> " hostname
 echo $hostname > /mnt/etc/hostname
 #Nome da maquina#
 clear
-#Aguardando modificação
-echo -e "Qual bootloader deseja instalar ? \n\n 1=Grub \n 2=Syslinux \n"
-read -p "> " bootloader
-if [ $bootloader == 1 ]
+#Bootloader
+echo -e "Qual modo deseja instalar? \n\n 1=UEFI-GPT \n 2=BIOS(Legacy)-MBR \n"
+read -p "> " bios
+if [ $bios == 1 ]
 then
-    arch-chroot /mnt/ pacman -S grub os-prober
-    arch-chroot /mnt/ grub-install /dev/sda #modificar
+    arch-chroot /mnt/ pacman -S grub os-prober efibootmgr --noconfirm
+    arch-chroot /mnt/ grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=GRUB
+    arch-chroot /mnt/ os-prober
     arch-chroot /mnt/ grub-mkconfig -o /boot/grub/grub.cfg
-elif [ $bootloader == 2 ]
+    arch-chroot /mnt/ mkdir /boot/efi/EFI/boot
+    arch-chroot /mnt/ cp /boot/efi/EFI/GRUB/grubx64.efi /boot/efi/EFI/BOOT/BOOTX64.EFI && echo "bcf boot add 1 fs0:\EFI\GRUB\grubx64.efi" >> /boot/efi/startup.nsh
+elif [ $bios == 2 ]
 then
-    arch-chroot /mnt/ pacman -S syslinux gptfdisk --noconfirm
-    arch-chroot /mnt/ syslinux-install_update -i -a -m
-    arch-chroot /mnt/ nano /boot/syslinux/syslinux.cfg
+    arch-chroot /mnt/ pacman -S grub os-prober  --noconfirm
+    arch-chroot /mnt/ grub-install --target=i386-pc /dev/sda
+    arch-chroot /mnt/ os-prober
+    arch-chroot /mnt/ grub-mkconfig -o /boot/grub/grub.cfg
 fi
-#Aguardando modificação
+#Bootloader
+
 #Wireless#
 arch-chroot /mnt/ pacman -S networkmanager network-manager-applet wireless_tools wpa_supplicant dhcp dhcpcd --noconfirm
 arch-chroot /mnt/ systemctl enable dhcpcd
@@ -248,6 +296,8 @@ arch-chroot /mnt/ systemctl enable NetworkManager
 arch-chroot /mnt/ pacman -S xorg-xinit xorg-twm xterm xorg-xclock xorg-server xorg-apps xf86-input-synaptics xarchiver arj p7zip sharutils unrar mlocate lzip unzip pulseaudio pulseaudio-alsa pavucontrol alsa-firmware alsa-utils a52dec faac faad2 flac jasper lame libdca libdv libmad libmpeg2 libtheora libvorbis libxv wavpack x264 xvidcore gstreamer gst-plugins-base gst-plugins-base-libs gst-plugins-good gst-plugins-bad gst-plugins-ugly gst-libav gvfs gvfs-afc gvfs-mtp gvfs-smb ntfs-3g --noconfirm
 #XORG,SOM,VIDEO,ARQUIVOS E CODECS#
 clear
+nano /mnt/etc/pacman.conf
+pacman -Sy
 #Instalando driver de video#
 echo -e "\n Selecione o driver de video correspondente à sua maquina: \n\n 1=AMD \n 2=Intel \n 3=Nvidia \n 4=Genérico \n 5=ATI \n" 
 read -p "> " driver_video 
