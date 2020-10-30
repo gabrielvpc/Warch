@@ -275,7 +275,7 @@ then
     arch-chroot /mnt/ os-prober
     arch-chroot /mnt/ grub-mkconfig -o /boot/grub/grub.cfg
     arch-chroot /mnt/ mkdir /boot/efi/EFI/boot
-    arch-chroot /mnt/ cp /boot/efi/EFI/GRUB/grubx64.efi /boot/efi/EFI/BOOT/BOOTX64.EFI && echo "bcf boot add 1 fs0:\EFI\GRUB\grubx64.efi" >> /boot/efi/startup.nsh
+    arch-chroot /mnt/ cp /boot/efi/EFI/GRUB/grubx64.efi /boot/efi/EFI/BOOT/BOOTX64.EFI
 elif [ $bios == 2 ]
 then
     arch-chroot /mnt/ pacman -S grub os-prober  --noconfirm
