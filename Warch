@@ -1,61 +1,6 @@
 #!/bin/bash
-
 pacman -Sy
 clear
-
-#Configurando o teclado#
-echo -e 'Configurando o teclado:'
-echo -e '\nIndique o formato do seu teclado !'
-echo -e '\n 1=br-abnt \n 2=br-abnt2 \n 3=br-latin1-abnt2 \n 4=br-latin1-us \n'
-read -p "> " linguagem
-if [ $linguagem == 1 ]
-then
-	loadkeys br-abnt
-	echo -e "\nSeu teclado agora é br-abnt !"
-
-elif [ $linguagem == 2 ]
-then
-	loadkeys br-abnt2
-	echo -e "\nSeu teclado agora é br-abnt2 !"
-
-elif [ $linguagem == 3 ]
-then
-	loadkeys br-latin1-abnt2
-	echo -e "\nSeu teclado agora é br-latin1-abnt2 !"
-
-elif [ $linguagem == 4 ]
-then
-	loadkeys br-latin1-us
-	echo -e "\nSeu teclado agora é br-latin1-us !"	
-else
-	clear
-	echo "Insira apenas números de 1 à 4 !! "
-	exit
-fi
-#Configurando o teclado#
-
-clear
-
-#Configurando a rede#
-echo -e 'Configurando a rede:'
-echo -e '\n(Nota importante > Quando for necessário responder sim ou não , responda absolutamente em minúsculo !!)\n'
-read -p "Você está conectado a internet ? s/n = " conexao
-if [ $conexao == n ]
-then 
-	clear
-	wifi-menu
-elif [ $conexao == s ]
-then	
-	echo
-else
-	clear
-	echo "Apenas (s) ou (n) !!"	
-	exit		
-fi
-#Configurando a internet#
-
-clear
-
 #Particionando o disco#
 echo -e 'Particionando o disco:'
 echo -e '\n 1=cfdisk \n 2=parted \n'
@@ -66,28 +11,20 @@ then
 elif [ $particionador == 2 ] 
 then
 	parted  
-else
-	echo "Apenas 1 ou 2 !! "
-	exit
 fi
 #Particionando o disco#
-
 clear
-
 #Formatando as partições#
 while [ $saida: != sair ]
 do
 	clear
+	fdisk -l
 	echo -e "\n"
-	echo -e "Formatando as partições:"
-	fdisk -l | grep /dev/
-	echo -e "\n"
-	echo -e "(Caso já tenha particionado e formatado o disco , apenas aperte 'Enter' e digite 'sair' no final)"
-	echo -e "\n"
-	echo -e "Selecione uma partição ! ,EX: /dev/sda1 /dev/sda2 !!\n"
+    echo -e "Formatando as partições:"
 	read -p "Selecione sua partição = " particao
+    clear
 	echo -e "\nEsquema de formatação de discos"
-	echo -e "\n 1=Ext4 \n 2=Ext3 \n 3=Ext2 \n 4=Fat \n 5=Vfat \n 6=NTFS \n 7=Swap\n"
+	echo -e "\n 1=Ext4 \n 2=Ext3 \n 3=Ext2 \n 4=Swap\n 5=Fat32 \n"
 	read -p "Insira um número = " formato
 			if [ $formato == 1 ]
 			then
@@ -100,19 +37,11 @@ do
 				mkfs.ext2 $particao
 			elif [ $formato == 4 ]
 			then
-				mkfs.fat $particao
-			elif [ $formato == 5 ]
-			then 
-				mkfs.vfat $particao
-			elif [ $formato == 6 ]
-			then
-				mkfs.ntfs $particao
-			elif [ $formato == 7 ]
-			then
 				mkswap $particao
 				swapon $particao
-			else
-				echo -e "Apenas numeros entre 1 à 7 !!"
+            elif [ $formato == 5 ]
+            then
+                
 			fi
 	clear
 	echo -e "\nPressione 'Enter' para continuar o particionamento ou digite 'sair' quando terminar de configurar todas as partições\n "
@@ -123,83 +52,157 @@ do
 		fi
 done
 #Formatando as partições#
-
 clear
-
-#SConfigurando partições#
-echo -e 'Configurando partições:\n'
-fdisk -l | grep /dev/
-echo -e "\n"
-read -p "Indique a sua partição / (root) = " particao_root 
-mount $particao_root /mnt
+#Configurando partições#
 mkdir /mnt/home
 mkdir /mnt/boot
-clear
-read -p "Deseja indicar outras partições? s/n = " particoes
-while [ $particoes == s ]
-do
-	clear
-	echo -e 'Configurando partições:\n'
-	fdisk -l | grep /dev/
-	echo -e "\n"
-	read -p "Indique a sua partição = " particao
-	read -p "Indique o local em que ela será montada, EX: /home /boot = " particaoMont
-	mount $particao /mnt$particaoMont
-	echo -e "\nPressione 'Enter' para continuar o particionamento ou digite 'sair' quando terminar de configurar todas as partições\n "
-	read -p "= " particoes1
-    	if [ $particoes1 == sair ]
-    	then
-        	    break
+fdisk -l | grep dev
+echo -e "\n 1=/dev/sda1 \n 2=/dev/sda2 \n 3=/dev/sda3 \n 4=/dev/sda4 \n 5=/dev/sda5 \n 6=/dev/sda6 \n 7=/dev/sda7 \n 8=/dev/sda8 \n 9=/dev/sda9 \n 10=/dev/sda10 \n "
+read -p "Qual partição você deseja utilizar como /root ? = " particao_root
+        if [ $particao_root == 1 ]
+        then
+                mount /dev/sda1 /mnt/
+        elif [ $particao_root == 2 ]
+        then
+                mount /dev/sda2 /mnt/
+        elif [ $particao_root == 3 ]
+        then
+                mount /dev/sda3 /mnt/
+        elif [ $particao_root == 4 ]
+        then
+                mount /dev/sda4 /mnt/
+        elif [ $particao_root == 5 ]
+        then
+                mount /dev/sda5 /mnt/
+        elif [ $particao_root == 6 ]
+        then
+                mount /dev/sda6 /mnt/
+        elif [ $particao_root == 7 ]
+        then
+                mount /dev/sda7 /mnt/
+        elif [ $particao_root == 8 ]
+        then
+                mount /dev/sda8 /mnt/
+        elif [ $particao_root == 9 ]
+        then
+                mount /dev/sda9 /mnt/
+        elif [ $particao_root == 10 ]
+        then
+                mount /dev/sda10 /mnt/
 		fi
-done
-#SConfigurando partições#
-
 clear
-
+fdisk -l
+echo -e "\n"
+read -p "Deseja criar a partição /home ? s/n = " criar_home
+if [ $criar_home == s ]
+then
+    echo -e "\n 1=/dev/sda1 \n 2=/dev/sda2 \n 3=/dev/sda3 \n 4=/dev/sda4 \n 5=/dev/sda5 \n 6=/dev/sda6 \n 7=/dev/sda7 \n 8=/dev/sda8 \n 9=/dev/sda9 \n 10=/dev/sda10 \n "        
+    read -p "Qual partição você deseja utilizar como /home ? = " particao_home
+    if [ $particao_home == 1 ]
+    then
+            mount /dev/sda1 /mnt/home
+    elif [ $particao_home == 2 ]
+    then
+            mount /dev/sda2 /mnt/home
+    elif [ $particao_home == 3 ]
+    then
+            mount /dev/sda3 /mnt/home
+    elif [ $particao_home == 4 ]
+    then
+            mount /dev/sda4 /mnt/home
+    elif [ $particao_home == 5 ]
+    then
+            mount /dev/sda5 /mnt/home
+    elif [ $particao_home == 6 ]
+    then
+            mount /dev/sda6 /mnt/home
+    elif [ $particao_home == 7 ]
+    then
+            mount /dev/sda7 /mnt/home
+    elif [ $particao_home == 8 ]
+    then
+            mount /dev/sda8 /mnt/home
+    elif [ $particao_home == 9 ]
+    then
+            mount /dev/sda9 /mnt/home
+    elif [ $particao_home == 10 ]
+    then
+            mount /dev/sda10 /mnt/home
+    fi
+fi
+clear
+fdisk -l
+echo -e "\n"
+read -p "Deseja criar a partição /boot ? s/n = " criar_boot
+if [ $criar_boot == s ]
+then
+    echo -e "\n 1=/dev/sda1 \n 2=/dev/sda2 \n 3=/dev/sda3 \n 4=/dev/sda4 \n 5=/dev/sda5 \n 6=/dev/sda6 \n 7=/dev/sda7 \n 8=/dev/sda8 \n 9=/dev/sda9 \n 10=/dev/sda10 \n "        
+    read -p "Qual partição você deseja utilizar como /boot ? = " particao_boot
+    if [ $particao_boot == 1 ]
+    then
+            mount /dev/sda1 /mnt/boot
+    elif [ $particao_boot == 2 ]
+    then
+            mount /dev/sda2 /mnt/boot
+    elif [ $particao_boot == 3 ]
+    then
+            mount /dev/sda3 /mnt/boot
+    elif [ $particao_boot == 4 ]
+    then
+            mount /dev/sda4 /mnt/boot
+    elif [ $particao_boot == 5 ]
+    then
+            mount /dev/sda5 /mnt/boot
+    elif [ $particao_boot == 6 ]
+    then
+            mount /dev/sda6 /mnt/boot
+    elif [ $particao_boot == 7 ]
+    then
+            mount /dev/sda7 /mnt/boot
+    elif [ $particao_boot == 8 ]
+    then
+            mount /dev/sda8 /mnt/boot
+    elif [ $particao_boot == 9 ]
+    then
+            mount /dev/sda9 /mnt/boot
+    elif [ $particao_boot == 10 ]
+    then
+            mount /dev/sda10 /mnt/boot
+    fi
+fi
+#Configurando partições#
+clear
 #Instalando o sistema base e o kernel#
 echo -e 'Instalando o sistema base e o kernel: \n'
 echo -e "\nQual kernel deseja instalar ? \n\n 1=Linux \n 2=Linux-lts \n 3=Linux-hardened \n"
 read -p "> " kernel_sistema
 if [ $kernel_sistema == 1 ]
 then
-	pacstrap /mnt base linux linux-firmware
+	pacstrap /mnt nano base linux linux-firmware
 elif [ $kernel_sistema == 2 ]
 then
-	pacstrap /mnt base linux-lts linux-firmware
+	pacstrap /mnt nano base linux-lts linux-firmware
 elif [ $kernel_sistema == 3 ]
 then
-	pacstrap /mnt base linux-hardened linux-firmware
-else
-	clear
-	echo -e 'Apenas números de 1 à 3 !'
-	exit
+	pacstrap /mnt nano base linux-hardened linux-firmware
 fi
 #Instalando o sistema base e o kernel#
-
 #Configurando o Fstab#
 genfstab -U /mnt >> /mnt/etc/fstab
 #Configurando o Fstab#
-
 clear
-
 #Configurando idioma#
-echo 'LANG=pt_BR.UTF-8' > /etc/locale.conf
+echo 'LANG=pt_BR.UTF-8' > /mnt/etc/locale.conf
+echo 'pt_BR.UTF-8 UTF-8' >> /mnt/etc/locale.gen
+arch-chroot /mnt/ locale-gen
 #Configurando idioma#
-
-#mkinitcpio#
 arch-chroot /mnt/ mkinitcpio -P
-#mkinitcpio#
-
 clear
-
 #Definindo a senha do root#
 echo -e 'Definindo senha do root: \n'
-echo -e "\nInsira a senha do seu root "
-arch-chroot /mnt/ passwd
+arch-chroot /mnt/ passwd root
 #Definindo a senha do root#
-
 clear
-
 #Criando usuario#
 echo -e 'Criando usuário: \n'
 echo -e 'Digite o nome do seu usuário: '
@@ -214,118 +217,109 @@ mkdir /mnt/home/$usuario/Scripts
 mkdir /mnt/home/$usuario/.icons
 mkdir /mnt/home/$usuario/.themes
 #Criando usuario#
-
 clear
-
-#Instalando o systlinux e essenciais#
-arch-chroot /mnt/ pacman -S syslinux gptfdisk --noconfirm
-arch-chroot /mnt/ syslinux-install_update -i -a -m
-arch-chroot /mnt/ pacman -S nano networkmanager network-manager-applet wireless_tools wpa_supplicant dhcp dhcpcd --noconfirm
+#Nome da maquina#
+echo -e "Qual nome deseja dar para esta maquina ? \n"
+read -p "> " hostname
+echo $hostname > /mnt/etc/hostname
+#Nome da maquina#
+clear
+#Aguardando modificação
+echo -e "Qual bootloader deseja instalar ? \n\n 1=Grub \n 2=Syslinux \n"
+read -p "> " bootloader
+if [ $bootloader == 1 ]
+then
+    arch-chroot /mnt/ pacman -S grub os-prober
+    arch-chroot /mnt/ grub-install /dev/sda #modificar
+    arch-chroot /mnt/ grub-mkconfig -o /boot/grub/grub.cfg
+elif [ $bootloader == 2 ]
+then
+    arch-chroot /mnt/ pacman -S syslinux gptfdisk --noconfirm
+    arch-chroot /mnt/ syslinux-install_update -i -a -m
+    arch-chroot /mnt/ nano /boot/syslinux/syslinux.cfg
+fi
+#Aguardando modificação
+#Wireless#
+arch-chroot /mnt/ pacman -S networkmanager network-manager-applet wireless_tools wpa_supplicant dhcp dhcpcd --noconfirm
 arch-chroot /mnt/ systemctl enable dhcpcd
 arch-chroot /mnt/ systemctl enable NetworkManager
-#Instalando o syslinux e essenciais#
-
-clear
-
+#Wireless#
 #XORG,SOM,VIDEO,ARQUIVOS E CODECS#
-arch-chroot /mnt/ pacman -S xorg-xinit xorg-twm xterm xorg-xclock xorg-server xorg-apps xf86-input-synaptics xarchiver arj p7zip sharutils unrar mlocate lzip unzip pulseaudio pulseaudio-alsa pavucontrol alsa-firmware alsa-utils a52dec faac faad2 flac jasper lame libdca libdv libmad libmpeg2 libtheora libvorbis libxv wavpack x264 xvidcore gstreamer gst-plugins-base gst-plugins-base-libs gst-plugins-good gst-plugins-bad gst-plugins-ugly gst-libav gvfs gvfs-afc gvfs-mtp gvfs-smb --noconfirm
-
+arch-chroot /mnt/ pacman -S xorg-xinit xorg-twm xterm xorg-xclock xorg-server xorg-apps xf86-input-synaptics xarchiver arj p7zip sharutils unrar mlocate lzip unzip pulseaudio pulseaudio-alsa pavucontrol alsa-firmware alsa-utils a52dec faac faad2 flac jasper lame libdca libdv libmad libmpeg2 libtheora libvorbis libxv wavpack x264 xvidcore gstreamer gst-plugins-base gst-plugins-base-libs gst-plugins-good gst-plugins-bad gst-plugins-ugly gst-libav gvfs gvfs-afc gvfs-mtp gvfs-smb ntfs-3g --noconfirm
 #XORG,SOM,VIDEO,ARQUIVOS E CODECS#
-
 clear
-
 #Instalando driver de video#
 echo -e "\n Selecione o driver de video correspondente à sua maquina: \n\n 1=AMD \n 2=Intel \n 3=Nvidia \n 4=Genérico \n 5=ATI \n" 
 read -p "> " driver_video 
-if [ $driver_video == 1 ] #VARIÁVEL 1 IRÁ INSTALAR OS DRIVERS DE VIDEO DA AMD/ATI
+if [ $driver_video == 1 ] 
 then
 	arch-chroot /mnt/ pacman -S xf86-video-amdgpu --noconfirm
 	arch-chroot /mnt/ pacman -S mesa --noconfirm
 	arch-chroot /mnt/ pacman -S lib32-mesa --noconfirm
-	clear
-elif [ $driver_video == 2 ] #VARIÁVEL 2 IRÁ INSTALAR OS DRIVERS DE VIDEO DA INTEL
+elif [ $driver_video == 2 ] 
 then
 	arch-chroot /mnt/ pacman -S xf86-video-intel --noconfirm
 	arch-chroot /mnt/ pacman -S mesa --noconfirm
 	arch-chroot /mnt/ pacman -S lib32-mesa --noconfirm
-	clear
-elif [ $driver_video == 3 ] #VARIÁVEL 3 IRÁ INSTALAR OS DRIVERS DE VIDEO DA NVIDIA
+elif [ $driver_video == 3 ] 
 then
 	arch-chroot /mnt/ pacman -S xf86-video-nouveau --noconfirm
 	arch-chroot /mnt/ pacman -S nvidia --noconfirm
 	arch-chroot /mnt/ pacman -S nvidia-utils --noconfirm
-	clear
-elif [ $driver_video == 4 ] #VARIÁVEL 4 IRÁ INSTALAR OS DRIVERS DE VIDEO GENÉRICOS
+elif [ $driver_video == 4 ] 
 then
 	arch-chroot /mnt/ pacman -S xf86-video-fbdev --noconfirm
 	arch-chroot /mnt/ pacman -S xf86-video-vesa --noconfirm
-	clear
-elif [ $driver_video == 5 ] #VARIÁVEL 5 IRÁ INSTALAR OS DRIVER DE VIDEO DÁ ATI
+elif [ $driver_video == 5 ]
 then
 	arch-chroot /mnt/ pacman -S xf86-video-ati --noconfirm
 	arch-chroot /mnt/ pacman -S mesa --noconfirm
 	arch-chroot /mnt/ pacman -S lib32-mesa --noconfirm
-	clear
-else
-	clear 
-	echo -e "\n Apenas números de 1 à 4 !!" 
-	break 
 fi 
 #Instalando driver de video#
- 
+clear
 #Instalando a interface gráfica#
 echo -e "\n Selecione uma interface gráfica: \n\n 1=Budgie \n 2=Cinnamon \n 3=Deepin \n 4=Enlightenment \n 5=Gnome \n 6=Kde Plasma \n 7=Lxde \n 8=Lxqt \n 9=Mate \n 10=Xfce \n" 
 read -p "> " interface 
-if [ $interface == 1 ] #VARIÁVEL 1 IRÁ INSTALAR A INTERFACE BUDGIE
+if [ $interface == 1 ] 
 then
 	arch-chroot /mnt/ pacman -S budgie-desktop --noconfirm
-	clear
-elif [ $interface == 2 ] #VARIÁVEL 2 IRÁ INSTALAR A INTERFACE CINNAMON
+elif [ $interface == 2 ] 
 then
 	arch-chroot /mnt/ pacman -S cinnamon --noconfirm
 	arch-chroot /mnt/ pacman -S nemo-fileroller --noconfirm
-	clear
-elif [ $interface == 3 ] #VARIÁVEL 3 IRÁ INSTALAR A INTERFACE DEEPIN
+elif [ $interface == 3 ]
 then
 	arch-chroot /mnt/ pacman -S deepin --noconfirm
 	arch-chroot /mnt/ pacman -S deepin-extra --noconfirm
-elif [ $interface == 4 ] #VARIÁVEL 4 IRÁ INSTALAR A INTERFACE ENLIGHTENMENT
+elif [ $interface == 4 ] 
 then
-	arch-chroot /mnt/ pacman -S enlightenment --noconfirm
-	clear
-elif [ $interface == 5 ] #VARIÁVEL 5 IRÁ INSTALAR A INTERFACE GNOME
+    arch-chroot /mnt/ pacman -S enlightenment --noconfirm
+elif [ $interface == 5 ]
 then
-	arch-chroot /mnt/ pacman -S gnome --noconfirm
+    arch-chroot /mnt/ pacman -S gnome --noconfirm
 	arch-chroot /mnt/ pacman -S gnome-extra --noconfirm
-	clear
-elif [ $interface == 6 ] #VARIÁVEL 6 IRÁ INSTALAR A INTERFACE KDE-PLASMA
+elif [ $interface == 6 ] 
 then
-	arch-chroot /mnt/ pacman -S plasma --noconfirm
-elif [ $interface == 7 ] #VARIÁVEL 7 IRÁ INSTALAR A INTERFACE LXDE
+    arch-chroot /mnt/ pacman -S plasma --noconfirm
+elif [ $interface == 7 ]
 then
 	arch-chroot /mnt/ pacman -S lxde --noconfirm
 	arch-chroot /mnt/ pacman -S lxde-gtk3 --noconfirm
-elif [ $interface == 8 ] #VARIÁVEL 8 IRÁ INSTALAR A INTERFACE LXQT
+elif [ $interface == 8 ] 
 then
 	arch-chroot /mnt/ pacman -S lxqt --noconfirm
-	clear
-elif [ $interface == 9 ] #VARIÁVEL 9 IRÁ INSTALAR A INTERFACE MATE
+elif [ $interface == 9 ] 
 then
 	arch-chroot /mnt/ pacman -S mate --noconfirm
 	arch-chroot /mnt/ pacman -S mate-extra --noconfirm
-	clear
-elif [ $interface == 10 ] #VARIÁVEL 10 IRÁ INSTALAR A INTERFACE XFCE
+elif [ $interface == 10 ]
 then
 	arch-chroot /mnt/ pacman -S xfce4 --noconfirm
 	arch-chroot /mnt/ pacman -S xfce4-goodies --noconfirm
-	clear
-else
-	clear 
-	echo -e "\n Apenas números de 1 à 10 !!" 
-	break 
 fi 
 #Instalando a interface gráfica#
-
+clear
 #Display Manager#
 echo -e "\n Selecione um gerenciador de entrada (Display Manager): \n\n 1=Lightdm \n 2=SDDM \n 3=GDM \n 4=Lxdm \n" 
 read -p "> " display 
@@ -333,29 +327,21 @@ if [ $display == 1 ]
 then
 	arch-chroot /mnt/ pacman -S lightdm lightdm-gtk-greeter lightdm-gtk-greeter-settings --noconfirm
 	arch-chroot /mnt/ systemctl enable lightdm
-	clear
 elif [ $display == 2 ]
 then
 	arch-chroot /mnt/ pacman -S sddm --noconfirm
 	arch-chroot /mnt/ systemctl enable sddm
-	clear
 elif [ $display == 3 ]
 then
 	arch-chroot /mnt/ pacman -S gdm --noconfirm
 	arch-chroot /mnt/ systemctl enable gdm
-	clear
 elif [ $display == 4 ]
 then
 	arch-chroot /mnt/ pacman -S lxdm --noconfirm
 	arch-chroot /mnt/ systemctl enable lxdm
-	clear
-else
-	clear
-	echo -e "\n Apenas números de 1 à 4 !!" 
-	break
 fi
 #Display Manager#
-
+clear
 #Instalando o Bluetooth#
 echo -e "\n Deseja instalar os drivers de Bluetooth ? s/n \n"
 read -p  "> " bluetooth
@@ -367,17 +353,9 @@ then
 	arch-chroot /mnt/ modprobe btusb
 	arch-chroot /mnt/ systemctl enable bluetooth
 	arch-chroot /mnt/ systemctl start bluetooth
-	clear 
-elif [ $bluetooth == n ]
-then
-	clear
-else
-	clear
-	echo -e "\n Apenas 's' ou 'n' !! "
-	exit
 fi
 #Instalando o Bluetooth#
-
+clear
 #Instalando os drivers de impressora#
 echo -e "\n Deseja instalar os drivers de impressora ? s/n  \n"
 read -p "> " impressora
@@ -389,93 +367,62 @@ then
 	arch-chroot /mnt/ pacman -S gtk3-print-backends --noconfirm
 	arch-chroot /mnt/ systemctl enable org.cups.cupsd.service
 	arch-chroot /mnt/ systemctl start org.cups.cupsd.service
-	clear
-elif [ $impressora == n ]
-then
-	clear
-else
-	clear
-	echo -e "\n Apenas 's' ou 'n' !! "
-	exit
 fi
 #Instalando os drivers de impressora#
-
+clear
 #Instalando um navegador#
 echo -e "\n Qual navegador deseja instalar: \n\n 0=Nenhum \n 1=Chromium \n 2=Firefox \n 3=Min \n 4=Opera \n"
 read -p "> " navegador
 if [ $navegador == 0 ]
 then
-	clear
+    echo
 elif [ $navegador == 1 ]
 then
 	arch-chroot /mnt/ pacman -S chromium --noconfirm
-	clear
 elif [ $navegador == 2 ]
 then
 	arch-chroot /mnt/ pacman -S firefox --noconfirm
-	arch-chroot /mnt/ pacman -S firefox-i18n-pt-br --noconfirm
-	clear
+    arch-chroot /mnt/ pacman -S firefox-i18n-pt-br --noconfirm
 elif [ $navegador == 3 ]
 then
-	arch-chroot /mnt/ pacman -S min --noconfirm
-	clear
+    arch-chroot /mnt/ pacman -S min --noconfirm
 elif [ $navegador == 4 ]
 then
 	arch-chroot /mnt/ pacman -S opera --noconfirm
-	clear
-else
-	clear
-	echo -e "\n Apenas números de 0 a 4 "
-	exit
 fi
 #Instalando um navegador#
-
+clear
 #Torrent#
 echo -e "\nQual cliente torrent deseja instalar: \n\n 0=Nenhum \n 1=Deluge \n 2=qbittorrent \n 3=transmission \n 4=ktorrent"
 read -p "> " cliente_torrent
 if [ $cliente_torrent = 0 ]
 then
-	clear
+    echo
 elif [ $cliente_torrent == 1 ]
 then
 	arch-chroot /mnt/ pacman -S deluge --noconfirm
 	arch-chroot /mnt/ pacman -S deluge-gtk --noconfirm
-	clear
 elif [ $cliente_torrent == 2 ]
 then
 	arch-chroot /mnt/ pacman -S qbittorrent --noconfirm
-	clear
 elif [ $cliente_torrent == 3 ]
 then
-	arch-chroot /mnt/ pacman -S transmission-gtk --noconfirm	
-	clear
+    arch-chroot /mnt/ pacman -S transmission-gtk --noconfirm	
 elif [ $cliente_torrent == 4 ]
 then
 	arch-chroot /mnt/ pacman -S ktorrent --noconfirm
-	clear
-else
-	clear
-	echo -e "\n Apenas números de 1 a 4 "
-	exit
 fi
 #Torrent#
-
+clear
 #Pacotes utilitários extras#
 echo -e "\nDeseja instalar alguns pacotes extras ? s/n "
 read -p "> " utilitarios
 if [ $utilitarios == s ]
 then
-	arch-chroot /mnt/ pacman -S xed git terminator galculator packer make gcc fakeroot dnsmasq gparted mtools wget curl htop sudo screenfetch acpi nmap net-tools ntfs-3g fuse2 dnsutils tor proxychains libreoffice libreoffice-pt-BR mupdf clamav firewalld  irssi binutils bash-completion --noconfirm
-	clear
+	arch-chroot /mnt/ pacman -S xed git terminator packer make gcc fakeroot dnsmasq gparted mtools wget curl htop sudo screenfetch man aircrack-ng reaver acpi nmap net-tools fuse2 dnsutils tor proxychains mupdf clamav firewalld  binutils bash-completion gimp --noconfirm
 elif [ $utilitarios == n ]
 then
-	clear
-else
-	clear
-	echo -e "\nInsira apenas 's' ou 'n' "
-	exit
+    echo
 fi
 #Pacotes utilitários extras#
 echo -e "Agora reinicie a máquina !! "
-
-
